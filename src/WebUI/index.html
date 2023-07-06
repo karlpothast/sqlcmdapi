@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SQL Mgmt Web</title>
+    <link rel="stylesheet" href="./styles.css"/>
+  </head>  
+  <body>
+    <div id="sqlDiv">
+      <div id="divHeader">
+        <img src="logo.png">
+        <span class="header">
+          SQL Mgmt Web</span>
+      </div>
+      <div id="divContent">
+        <div class="div-table">
+          <div class="div-table-row">
+            <div class="div-table-col objectsColumn columnHeader">
+              SQL Objects
+            </div>
+            <div class="div-table-col queryColumn columnHeader">SQL Query</div>
+          </div>
+          <div class="div-table-row">
+            <div class="div-table-col objectsColumn" id="divObjects1">
+              <label id="lblObjects"></label>
+            </div>
+            <div class="div-table-col queryColumn" id="divQuery1">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="divFooter">
+      </div>
+    </div>
+    <script src="./index.js"></script>
+    <script>
+      const lblObjects = document.getElementById("lblObjects");
+      function getSQLResults(username, password, database, sqlCommandText) {
+        if(sqlCommandText == "") {
+          alert("SQL command text is blank");
+          return;
+        }
+        var bodyPostString;
+        bodyPostString = 
+       `{
+          "username": "${username}",
+          "password": "${password}",
+          "database": "${database}",
+          "sqlCommandText": "${sqlCommandText}"
+        }`;
+
+        //console.log(bodyPostString);
+
+        var jsonParsedBody = JSON.parse(bodyPostString);
+        fetch('http://0.0.0.0:1432/sql/sqlcommand', {
+          method: 'POST',
+          body: JSON.stringify(jsonParsedBody),
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          }
+          })
+          .then(function(response){ 
+          return response.json()})
+          .then(function(data)
+          {  
+            var htmlString = "<table>";
+            var jsonReturn = RemoveControlChars(data);
+            var obj = JSON.parse(data);
+            var dbNames = JSON.parse(obj.SQLResponse);
+
+            for(let i = 0; i < dbNames.length; i++) {
+              let obj = dbNames[i];
+              if (obj.name == "annuity"){
+                htmlString += "<tr><td><img src='minus.png'/>" + obj.name + "</td></tr>";
+              }
+              else
+              {
+                htmlString += "<tr><td><img src='plus.png'/>" + obj.name + "</td></tr>";
+              }  
+          }
+          htmlString += "</table>";
+          lblObjects.innerHTML = htmlString;
+
+        }).catch(error => console.error('Error:', error)); 
+      }
+
+      function RemoveControlChars(rawString) {
+        var formattedString = rawString.replace("\\n","").replace(/\\/g, '');
+        return formattedString;
+      }
+
+      const initialize = async () => {
+        try {
+          const username = "sa";
+          const password = "n3wsdminDockr2022";
+          const database = "master"
+          const dbListQuery = "SELECT name FROM sys.databases FOR JSON AUTO";
+          getSQLResults(username, password, database, dbListQuery);
+
+          const tblQuery = "SELECT name FROM sys.tables FOR JSON AUTO";
+          
+        } 
+        catch(error) { 
+          console.log(error);
+        }
+      }
+      window.addEventListener('DOMContentLoaded', initialize)
+    </script> 
+  </body>
+</html>
+
+ 
