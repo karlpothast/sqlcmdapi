@@ -38,7 +38,10 @@ public class SQLController : ControllerBase
     if (httpPost != null && httpPost.SQLCommandText != null)
     {
       SQLResultsResponse sqlResults = new SQLResultsResponse();
-      sqlResults.SQLResponse = sqlcmd1.ExecSQLQuery(httpPost.SQLCommandText);
+      if (httpPost.Username != null && httpPost.Password != null && httpPost.Database  != null && httpPost.SQLCommandText != null)
+      {
+        sqlResults.SQLResponse = sqlcmd1.ExecSQLQuery(httpPost.Username, httpPost.Password, httpPost.Database, httpPost.SQLCommandText);
+      }
 
       var resp = JsonConvert.SerializeObject(sqlResults);
       result = resp;

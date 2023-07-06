@@ -7,21 +7,19 @@ namespace Api.SQL;
 
 public class SqlCmdWrapper
 {
-  public String ExecSQLQuery(String SQLCommandText)
+  public String ExecSQLQuery(String Username, String Password, String Database, String SQLCommandText)
   {
     var process = new Process();
     
     try {
 
-      String pw = "n3wsdminDockr2022";
       SQLCommandText = "\"" + SQLCommandText + "\"";
-      String databaseName = "newdb";
 
       var processStartInfo = new ProcessStartInfo()
       {
           WindowStyle = ProcessWindowStyle.Hidden,
           FileName = $"runsqlcmd.sh",
-          Arguments = $" -d /opt/mssql-tools/bin/sqlcmd -u sa -p " + pw + " -b " + databaseName + " -t " + SQLCommandText + "",
+          Arguments = $" -d /opt/mssql-tools/bin/sqlcmd -u " + Username + " -p " + Password + " -b " + Database + " -t " + SQLCommandText + "",
           RedirectStandardOutput = true,
           RedirectStandardError = true,
           UseShellExecute = false

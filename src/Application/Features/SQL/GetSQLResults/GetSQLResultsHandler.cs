@@ -13,7 +13,10 @@ namespace Application.Features.SQL.GetSQLResults;
 
 public class SQLCommandRequest
 {
-    public String? SQLCommandText { get; set; }
+    public String? Username { get; init; }
+    public String? Password { get; init; }
+    public String? Database { get; init; }
+    public String? SQLCommandText { get; init; }
 }
 
 public class SQLCommandResponse
