@@ -13,7 +13,6 @@ public class SqlCmdWrapper
     
     try {
 
-      String str_query = "";
       String pw = "n3wsdminDockr2022";
       SQLCommandText = "\"" + SQLCommandText + "\"";
       String databaseName = "newdb";

@@ -19,6 +19,8 @@ var builder = WebApplication.CreateBuilder(args);
                             "http://localhost",
                             "https://localhost",
                             "http://localhost:80",
+                            "http://localhost:3000",
+                            "http://localhost:3001",
                             "https://localhost:443",
                             "http://localhost:1432")
                             .AllowAnyHeader()
